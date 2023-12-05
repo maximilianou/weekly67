@@ -1,0 +1,17 @@
+version : “3”
+services :
+  srv1:
+    image: nginx
+    container_name: srv1
+    ports:
+      - 8022:22
+  srv2:
+    image: nginx
+    container_name: srv2
+    ports:
+      - 8026:22
+  srv3:
+    image: nginx
+    container_name: srv3
+    ports:
+      - 8028:22

@@ -537,6 +537,12 @@ fn main() {
 
 ```
 
+---
+
+- Smart Pointers
+
+Box<T>
+
 
 ---
 
