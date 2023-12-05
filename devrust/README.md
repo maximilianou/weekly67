@@ -544,5 +544,47 @@ fn main() {
 Box<T>
 
 
+
+```rs
+use std::ops::Deref;
+
+impl<T> Deref for MyBox<T> {
+  type Target = T;
+  fn deref(&self) -> &Self::Target {
+    &self.0
+  }
+}
+
+struct MyBox<T>(T);
+impl<T> MyBox<T> {
+  fn new(x: T) -> MyBox<T>{
+    MyBox(x)
+  }
+}
+///////////////////////////
+
+struct CustomSmartPointer {
+  data: String,
+}
+impl Drop for CustomSmartPointer {
+  fn drop(&mut self){
+    println!("Dropping CustomerSmartPointer with data: {}", self.data);
+  }
+}
+
+pub fn custom_smart_test(){
+  let c = CustomSmartPointer {
+    data: String::from("Prima Cosa"),
+  };
+  let d = CustomSmartPointer {
+    data: String::from("Seconda cosa"),
+  };
+  let e = CustomSmartPointer {
+    data: String::from("Tersa cosa"),
+  };
+  drop(e);
+  println!("CustomSmartPointer created.");
+} 
+```
 ---
 
