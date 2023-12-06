@@ -588,3 +588,151 @@ pub fn custom_smart_test(){
 ```
 ---
 
+
+```rs
+// concur/src/lib.rs
+use std::thread;
+use std::time::Duration;
+pub fn add(left: usize, right: usize) -> usize {
+    left + right
+}
+pub fn concur_step_01(){
+    let handle = thread::spawn(|| {
+      for _i in 1..10 {
+        println!("Spawned thread: {}", _i);
+        thread::sleep(Duration::from_millis(1));
+      }
+    });
+    handle.join().unwrap();
+}
+pub fn concur_step_02(){
+    for _i in 1..5 {
+        println!("Principal thread: {}", _i);
+        thread::sleep(Duration::from_millis(1));
+    }
+}
+pub fn concur_step_03(){
+    let handle = thread::spawn(|| {
+      for _i in 1..10 {
+        println!("Spawned thread: {}", _i);
+        thread::sleep(Duration::from_millis(1));
+      }
+    });
+    for _i in 1..5 {
+        println!("Principal thread: {}", _i);
+        thread::sleep(Duration::from_millis(1));
+    }
+    handle.join().unwrap();
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn it_works() {
+        let result = add(2, 2);
+        assert_eq!(result, 4);
+    }
+}
+
+```
+
+```rs
+// concur/src/main.rs
+use concur::{add, concur_step_01, concur_step_02, concur_step_03};
+fn main(){
+  println!(" {}", add(2,3));
+  println!("-- ");
+  concur_step_01();
+  println!("-- ");
+  concur_step_02();
+  println!("-- ");
+  concur_step_03();
+  println!("-- ");
+}
+```
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67/devrust/concur]
+└─$ cargo run 
+   Compiling concur v0.1.0 (/home/kali/projects/weekly67/devrust/concur)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.69s
+     Running `target/debug/concur`
+ 5
+-- 
+Spawned thread: 1
+Spawned thread: 2
+Spawned thread: 3
+Spawned thread: 4
+Spawned thread: 5
+Spawned thread: 6
+Spawned thread: 7
+Spawned thread: 8
+Spawned thread: 9
+-- 
+Principal thread: 1
+Principal thread: 2
+Principal thread: 3
+Principal thread: 4
+-- 
+Principal thread: 1
+Spawned thread: 1
+Principal thread: 2
+Spawned thread: 2
+Principal thread: 3
+Spawned thread: 3
+Principal thread: 4
+Spawned thread: 4
+Spawned thread: 5
+Spawned thread: 6
+Spawned thread: 7
+Spawned thread: 8
+Spawned thread: 9
+-- 
+
+```
+
+---
+
+
+
+```rs
+use std::sync::mpsc;
+pub fn concur_step_05(){
+  let (tx, rx) = mpsc::channel(); // tx Transmiter, rx Receiver
+  thread::spawn(move || {
+    let val = String::from("Message! Hi");
+    tx.send(val).unwrap();
+  });
+  let received = rx.recv().unwrap();
+  println!("Got: {}", received);
+}
+```
+
+
+---
+
+
+```rs
+use std::sync::Arc;
+pub fn concur_step_10(){
+    let counter = Arc::new(Mutex::new(0));
+    let mut handles = vec![];
+    for _ in 0..10 {
+        let counter = Arc::clone(&counter);
+        let handle = thread::spawn( move || {
+            let mut num = counter.lock().unwrap();
+            *num +=1;
+        });
+        handles.push(handle);
+    }
+    for handle in handles {
+        handle.join().unwrap();
+    }
+    println!("Result! {}", *counter.lock().unwrap());
+}
+```
+
+
+---
+
+
