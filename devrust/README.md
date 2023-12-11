@@ -776,7 +776,6 @@ fn split_at_mut(values: &mut [i32], mid: usize) -> (&mut [i32], &mut [i32]) {
 ---
 
 ```plantuml
-@startuml
 
 skin rose
 
@@ -807,7 +806,6 @@ DA -- Items
 [Business Logic] --( Items
 DA .. [Stored Procs]
 
-@enduml
 ```
 
 ---
