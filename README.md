@@ -598,10 +598,18 @@ spec:
 
 
 ```sh
+dev01@srv11:~$ flux check --pre
+► checking prerequisites
+✔ Kubernetes 1.27.4+k3s1 >=1.26.0-0
+✔ prerequisites checks passed
+
+
 dev01@srv11:~$ flux bootstrap github --context=staging --owner=maximilianou --repository=weekly67 --branch=main --personal --path=clusters/staging
 Please enter your GitHub personal access token (PAT): 
 ✗ context "staging" does not exist
 ```
+
+
 
 
 
