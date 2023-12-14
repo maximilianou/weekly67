@@ -1,0 +1,7 @@
+# apps/base/namespace.yml
+apiVersion: v1
+kind: namespace
+metadata:
+  name: podinfo
+  labels:
+    toolkit.fluxcd.io/tenant: dev-team

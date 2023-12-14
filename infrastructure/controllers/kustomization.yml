@@ -1,0 +1,6 @@
+# infrastructure/controllers/kustomization.yml
+apiVersion: Kustomization
+resource:
+  - cert-manager.yml
+  - ingress-nginx.yml
+  - weave-gitops.yml

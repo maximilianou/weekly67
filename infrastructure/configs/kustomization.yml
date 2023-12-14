@@ -1,0 +1,6 @@
+# infrastructure/configs/kustomization.yml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - cluster-issuers.yml
+  - network-policies.yml
