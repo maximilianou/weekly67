@@ -612,4 +612,15 @@ Please enter your GitHub personal access token (PAT):
 
 
 
+----------
+
+
+https://www.digitalocean.com/community/tutorials/how-to-set-up-a-continuous-delivery-pipeline-with-flux-on-digitalocean-kubernetes
+
+
+[TODO]
+https://thenewstack.io/tutorial-a-gitops-deployment-with-flux-on-digitalocean-kubernetes/
+
+
+
 
