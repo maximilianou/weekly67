@@ -1,0 +1,5 @@
+# apps/ns.yml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mywebapp

@@ -808,10 +808,37 @@ Merge made by the 'ort' strategy.
 
 ```
 
+```sh
+┌──(kali㉿kali)-[~]
+└─$ kubectl get ns -A
+NAME              STATUS   AGE
+kube-system       Active   25d
+default           Active   25d
+kube-public       Active   25d
+kube-node-lease   Active   25d
+metallb-system    Active   25d
+ingress-nginx     Active   25d
+flux-system       Active   4h14m
 
 ```
 
+
+```sh
+flux logs --all-namespaces
+...
+2023-12-18T14:19:17.036Z info GitRepository/flux-system.flux-system - no changes since last reconcilation: observed revision 'main@sha1:62f471f06abddee5c295a3c51f269d88d7afc26d' 
+2023-12-18T14:20:15.946Z info GitRepository/flux-system.flux-system - no changes since last reconcilation: observed revision 'main@sha1:62f471f06abddee5c295a3c51f269d88d7afc26d' 
+2023-12-18T14:21:38.436Z info GitRepository/flux-system.flux-system - stored artifact for commit 'wip: add infrastructure.yml ingress-helm-repo..' 
+2023-12-18T14:22:36.192Z info GitRepository/flux-system.flux-system - garbage collected 1 artifacts 
+2023-12-18T14:22:37.470Z info GitRepository/flux-system.flux-system - no changes since last reconcilation: observed revision 'main@sha1:035e3b55ddaf04c51e1d8d8d8cd62be4d47b6255' 
+2023-12-18T14:23:39.030Z info GitRepository/flux-system.flux-system - no changes since last reconcilation: observed revision 'main@sha1:035e3b55ddaf04c51e1d8d8d8cd62be4d47b6255' 
+2023-12-18T14:24:42.050Z info GitRepository/flux-system.flux-system - no changes since last reconcilation: observed revision 'main@sha1:035e3b55ddaf04c51e1d8d8d8cd62be4d47b6255' 
+2023-12-18T14:25:43.753Z info GitRepository/flux-system.flux-system - no changes since last reconcilation: observed revision 'main@sha1:035e3b55ddaf04c51e1d8d8d8cd62be4d47b6255' 
+...
 ```
+
+
+
 
 
 
