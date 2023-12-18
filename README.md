@@ -609,6 +609,190 @@ Please enter your GitHub personal access token (PAT):
 ✗ context "staging" does not exist
 ```
 
+<https://www.airplane.dev/blog/kubectl-config-set-context-tutorial-and-best-practices>
+
+- kubernetes Context
+
+kubectl - having no access to remote kubernetes server, will work localy for this flux.
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67]
+└─$ ssh -p 30122 -NL 16443:192.168.1.111:6443 dev01@srv01.simpledoers.com
+
+┌──(kali㉿kali)-[~/projects/weekly67]
+└─$ kubectl --kubeconfig ~/.kube/config2 get all -A
+E1218 09:30:30.350165   38401 memcache.go:265] couldn't get current server API group list: Get "https://localhost:16443/api?timeout=32s": tls: failed to verify certificate: x509: certificate signed by unknown authority
+```
+----------
+
+- create context with new ( dev-namespace, dev-user )
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67]
+└─$ kubectl config set-context dev-context --namespace=dev-namespace --cluster=default --user=dev-user
+Context "dev-context" created.
+
+┌──(kali㉿kali)-[~/projects/weekly67]
+└─$ kubectl config view
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://127.0.0.1:6443
+  name: default
+contexts:
+- context:
+    cluster: default
+    user: default
+  name: default
+- context:
+    cluster: default
+    namespace: dev-namespace
+    user: dev-user
+  name: dev-context
+current-context: default
+kind: Config
+preferences: {}
+users:
+- name: default
+  user:
+    client-certificate-data: DATA+OMITTED
+    client-key-data: DATA+OMITTED
+```
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67]
+└─$ kubectl config set-context dev-context --namespace=dev-ns --cluster=default --user=dev-usr        
+Context "dev-context" modified.
+                                                                                                                                                                 
+┌──(kali㉿kali)-[~/projects/weekly67]
+└─$ kubectl config view                                                                       
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://127.0.0.1:6443
+  name: default
+contexts:
+- context:
+    cluster: default
+    user: default
+  name: default
+- context:
+    cluster: default
+    namespace: dev-ns
+    user: dev-usr
+  name: dev-context
+current-context: default
+kind: Config
+preferences: {}
+users:
+- name: default
+  user:
+    client-certificate-data: DATA+OMITTED
+    client-key-data: DATA+OMITTED
+```
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67]
+└─$ kubectl config current-context
+default
+                                                                                                                                                                 
+┌──(kali㉿kali)-[~/projects/weekly67]
+└─$ kubectl config set-context dev-context                                                    
+Context "dev-context" modified.
+```
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67]
+└─$ kubectl config set-context dev-context
+Context "dev-context" modified.
+                                                                                                                                                                 
+┌──(kali㉿kali)-[~/projects/weekly67]
+└─$ kubectl config current-context        
+default
+```
+
+
+```
+kubectl config set-cluster \
+prod \
+--server=https://1.2.3.4 \
+--certificate-authority=xTsofu101...
+
+kubectl config set-context \
+prod \
+--namespace=production \
+--cluster=prod \
+--user=admin
+
+kubectl config set-credentials \
+admin \
+--client-certificate=<CERTIFICATE> \
+--client-key=<KEY>
+
+```
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67]
+└─$ kubectl config set-context current --namespace=dev-ns 
+Context "current" created.
+                                                                                                                                                                 
+┌──(kali㉿kali)-[~/projects/weekly67]
+└─$ kubectl config current-context                       
+default
+                                                                                                                                                                 
+┌──(kali㉿kali)-[~/projects/weekly67]
+└─$ kubectl config get-contexts   
+CURRENT   NAME          CLUSTER   AUTHINFO   NAMESPACE
+          current                            dev-ns
+*         default       default   default    
+          dev-context   default   dev-usr    dev-ns
+```
+
+
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67/clusters/dev-cluster]
+└─$ flux bootstrap github --owner=maximilianou --repository=weekly67 --path=clusters/dev-cluster --personal  
+Please enter your GitHub personal access token (PAT): 
+► connecting to github.com
+► cloning branch "main" from Git repository "https://github.com/maximilianou/weekly67.git"
+✔ cloned repository
+► generating component manifests
+✔ generated component manifests
+✔ committed sync manifests to "main" ("0bff9f52c44e25e35a36522fbd9ac23745d8fa1d")
+► pushing component manifests to "https://github.com/maximilianou/weekly67.git"
+► installing components in "flux-system" namespace
+✔ installed components
+✔ reconciled components
+► determining if source secret "flux-system/flux-system" exists
+► generating source secret
+✔ public key: ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzODQAAABhBMVPB3SvhjlDx3fDhZo0GxZ+MhE3XZHZaj/K+zOiakbQWP04iFaCFLLkLFnsxxXYaeDawESA4cTVSSPuM3P3NtUQA83FGsBIsWhtnWCC06m9WLiGfFi/IVWwPUqn0Uq2oQ==
+✔ configured deploy key "flux-system-main-flux-system-./clusters/dev-cluster" for "https://github.com/maximilianou/weekly67"
+► applying source secret "flux-system/flux-system"
+✔ reconciled source secret
+► generating sync manifests
+✔ generated sync manifests
+✔ committed sync manifests to "main" ("3066ca9e9d81496667b5d41744b47c983feed19a")
+► pushing sync manifests to "https://github.com/maximilianou/weekly67.git"
+► applying sync manifests
+✔ reconciled sync configuration
+◎ waiting for Kustomization "flux-system/flux-system" to be reconciled
+✔ Kustomization reconciled successfully
+► confirming components are healthy
+✔ helm-controller: deployment ready
+✔ kustomize-controller: deployment ready
+✔ notification-controller: deployment ready
+✔ source-controller: deployment ready
+✔ all components are healthy
+
+
+```
+
+
+
+
+
+
 
 
 
