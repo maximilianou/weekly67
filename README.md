@@ -769,7 +769,7 @@ Please enter your GitHub personal access token (PAT):
 ✔ reconciled components
 ► determining if source secret "flux-system/flux-system" exists
 ► generating source secret
-✔ public key: ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzODQAAABhBMVPB3SvhjlDx3fDhZo0GxZ+MhE3XZHZaj/K+zOiakbQWP04iFaCFLLkLFnsxxXYaeDawESA4cTVSSPuM3P3NtUQA83FGsBIsWhtnWCC06m9WLiGfFi/IVWwPUqn0Uq2oQ==
+✔ public key: ecdsa-sha2----
 ✔ configured deploy key "flux-system-main-flux-system-./clusters/dev-cluster" for "https://github.com/maximilianou/weekly67"
 ► applying source secret "flux-system/flux-system"
 ✔ reconciled source secret
@@ -839,10 +839,47 @@ flux logs --all-namespaces
 
 
 
+--------------------
+--------------------
 
 
 
+```sh 
+┌──(kali㉿kali)-[~/projects/weekly67]
+└─$ echo $GITHUB_TOKEN | flux bootstrap github --owner=maximilianou --repository=weekly67-1 --path=fleet/default --personal 
+Please enter your GitHub personal access token (PAT): 
+► connecting to github.com
+✔ repository "https://github.com/maximilianou/weekly67-1" created
+► cloning branch "main" from Git repository "https://github.com/maximilianou/weekly67-1.git"
+✔ cloned repository
+...
+```
 
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67-1]
+└─$ tree          
+.
+├── apps
+│   ├── ns.yml
+│   ├── web-ingress.yml
+│   ├── web-service.yml
+│   └── web.yml
+├── fleet
+│   ├── apps.yml
+│   ├── default
+│   │   ├── flux-system
+│   │   │   ├── gotk-components.yaml
+│   │   │   ├── gotk-sync.yaml
+│   │   │   └── kustomization.yaml
+│   │   └── infrastructure.yml
+│   └── infrastructure.yml
+└── infrastructure
+    ├── ingress-helm-release.yml
+    ├── ingress-helm-repo.yml
+    └── ingress-ns.yml
+
+6 directories, 13 files
+```
 
 
 
