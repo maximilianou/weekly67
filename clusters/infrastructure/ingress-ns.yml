@@ -1,0 +1,5 @@
+# clusters/infrastructure/ingress-ns.yml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ingress-system

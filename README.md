@@ -748,6 +748,9 @@ CURRENT   NAME          CLUSTER   AUTHINFO   NAMESPACE
           dev-context   default   dev-usr    dev-ns
 ```
 
+https://www.digitalocean.com/community/tutorials/how-to-set-up-a-continuous-delivery-pipeline-with-flux-on-digitalocean-kubernetes
+
+https://thenewstack.io/tutorial-a-gitops-deployment-with-flux-on-digitalocean-kubernetes/
 
 
 ```sh
@@ -786,12 +789,29 @@ Please enter your GitHub personal access token (PAT):
 ✔ all components are healthy
 
 
+┌──(kali㉿kali)-[~/projects/weekly67/clusters/dev-cluster]
+└─$ git config --global core.editor vi
+
+┌──(kali㉿kali)-[~/projects/weekly67/clusters/dev-cluster]
+└─$ git config pull.rebase false                       
+                                                                                                                                                        
+┌──(kali㉿kali)-[~/projects/weekly67/clusters/dev-cluster]
+└─$ git pull                    
+Merge made by the 'ort' strategy.
+ clusters/dev-cluster/flux-system/gotk-components.yaml | 8029 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ clusters/dev-cluster/flux-system/gotk-sync.yaml       |   27 +
+ clusters/dev-cluster/flux-system/kustomization.yaml   |    5 +
+ 3 files changed, 8061 insertions(+)
+ create mode 100644 clusters/dev-cluster/flux-system/gotk-components.yaml
+ create mode 100644 clusters/dev-cluster/flux-system/gotk-sync.yaml
+ create mode 100644 clusters/dev-cluster/flux-system/kustomization.yaml
+
 ```
 
 
+```
 
-
-
+```
 
 
 
@@ -803,11 +823,8 @@ Please enter your GitHub personal access token (PAT):
 ----------
 
 
-https://www.digitalocean.com/community/tutorials/how-to-set-up-a-continuous-delivery-pipeline-with-flux-on-digitalocean-kubernetes
 
 
-[TODO]
-https://thenewstack.io/tutorial-a-gitops-deployment-with-flux-on-digitalocean-kubernetes/
 
 
 
