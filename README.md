@@ -748,6 +748,8 @@ CURRENT   NAME          CLUSTER   AUTHINFO   NAMESPACE
           dev-context   default   dev-usr    dev-ns
 ```
 
+Reference: the complete step by step with the simplest sample
+
 https://www.digitalocean.com/community/tutorials/how-to-set-up-a-continuous-delivery-pipeline-with-flux-on-digitalocean-kubernetes
 
 https://thenewstack.io/tutorial-a-gitops-deployment-with-flux-on-digitalocean-kubernetes/
@@ -879,6 +881,232 @@ Please enter your GitHub personal access token (PAT):
     └── ingress-ns.yml
 
 6 directories, 13 files
+```
+
+
+
+
+
+
+```sh
+┌──(kali㉿kali)-[~]
+└─$ flux get sources git                                                                                              
+NAME            REVISION                SUSPENDED       READY   MESSAGE                                           
+flux-system     main@sha1:ceb2e2ac      False           True    stored artifact for revision 'main@sha1:ceb2e2ac'
+
+
+┌──(kali㉿kali)-[~/projects/weekly67-1]
+└─$ git log --decorate --oneline --graph --all
+* ceb2e2a (HEAD -> main, origin/main, origin/HEAD) feat: apps in fleat/default/apps.yml
+* e74bf41 feat: apps in fleat/default/apps.yml
+* 21e9eed feat: curl http://192.168.106.150/web web.xml
+* 818c776 wip: adding infrastructure, apps, ..
+* 6c00a68 Add Flux sync manifests
+* b29b4aa Add Flux v2.1.2 component manifests
+
+```
+
+Reference: step by step guide to see Logs or status
+
+<https://managedkube.com/gitops/flux/weaveworks/guide/tutorial/2020/05/01/a-complete-step-by-step-guide-to-implementing-a-gitops-workflow-with-flux.html>
+
+
+https://fluxcd.io/flux/monitoring/logs/
+
+https://fluxcd.io/flux/cmd/flux_trace/
+
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67-1]
+└─$ flux trace replicaset.apps/ingress-nginx-controller-6fcf745c45 --namespace ingress-system
+
+Object:         ReplicaSet/ingress-nginx-controller-6fcf745c45
+Namespace:      ingress-system
+Status:         Managed by Flux
+---
+HelmRelease:    ingress-nginx
+Namespace:      ingress-system
+Revision:       
+Status:         Last reconciled at 2023-12-18 17:06:00 +0100 CET
+Message:        install retries exhausted
+---
+HelmChart:      ingress-system-ingress-nginx
+Namespace:      flux-system
+Chart:          ingress-nginx
+Version:        4.0.13
+Revision:       4.0.13
+Status:         Last reconciled at 2023-12-18 17:00:46 +0100 CET
+Message:        pulled 'ingress-nginx' chart with version '4.0.13'
+---
+HelmRepository: ingress-nginx
+Namespace:      flux-system
+URL:            https://kubernetes.github.io/ingress-nginx
+Revision:       sha256:39523c
+Status:         Last reconciled at 2023-12-18 17:00:45 +0100 CET
+Message:        stored artifact: revision 'sha256:39523c'
+
+
+┌──(kali㉿kali)-[~/projects/weekly67-1]
+└─$ flux trace namespace mywebapp                                                            
+
+Object:          Namespace/mywebapp
+Status:          Managed by Flux
+---
+Kustomization:   app
+Namespace:       flux-system
+Path:            ./apps
+Revision:        
+Status:          Last reconciled at 2023-12-19 11:28:07 +0100 CET
+Message:         Ingress/mywebapp/mywebapp-ingress dry-run failed: failed to create typed patch object (mywebapp/mywebapp-ingress; networking.k8s.io/v1, Kind=Ingress): .spec.rules[0].paths: field not declared in schema
+
+---
+GitRepository:   flux-system
+Namespace:       flux-system
+URL:             ssh://git@github.com/maximilianou/weekly67-1
+Branch:          main
+Revision:        main@sha1:ceb2e2acc667c463bfc38559bbb966e2652a25dd
+Status:          Last reconciled at 2023-12-19 09:00:46 +0100 CET
+Message:         stored artifact for revision 'main@sha1:ceb2e2acc667c463bfc38559bbb966e2652a25dd'
+
+
+
+
+┌──(kali㉿kali)-[~]
+└─$ flux get sources git     
+NAME            REVISION                SUSPENDED       READY   MESSAGE                                           
+flux-system     main@sha1:ceb2e2ac      False           True    stored artifact for revision 'main@sha1:ceb2e2ac'
+
+┌──(kali㉿kali)-[~]
+└─$ flux reconcile source git flux-system
+► annotating GitRepository flux-system in flux-system namespace
+✔ GitRepository annotated
+◎ waiting for GitRepository reconciliation
+✔ fetched revision main@sha1:ceb2e2acc667c463bfc38559bbb966e2652a25dd
+
+
+
+Message:         Ingress/mywebapp/mywebapp-ingress dry-run failed: failed to create typed patch object (mywebapp/mywebapp-ingress; networking.k8s.io/v1, Kind=Ingress): .spec.rules[0].paths: field not declared in schema
+```
+
+
+```yml
+# apps/web-ingress.yml  
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mywebapp-ingress
+  namespace: mywebapp
+#  annotations:
+#    kubernetes.io/ingress.class: nginx
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /web
+        pathType: Prefix
+        backend:
+          service:
+            name: web
+            port:
+              number: 80
+```
+
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67-1]
+└─$ flux trace namespace mywebapp
+
+Object:          Namespace/mywebapp
+Status:          Managed by Flux
+---
+Kustomization:   app
+Namespace:       flux-system
+Path:            ./apps
+Revision:        
+Status:          Last reconciled at 2023-12-19 12:35:17 +0100 CET
+Message:         Ingress/mywebapp/mywebapp-ingress dry-run failed, reason: InternalError: Internal error occurred: failed calling webhook "validate.nginx.ingress.kubernetes.io": failed to call webhook: Post "https://ingress-nginx-controller-admission.ingress-system.svc:443/networking/v1/ingresses?timeout=10s": tls: failed to verify certificate: x509: certificate signed by unknown authority
+
+---
+GitRepository:   flux-system
+Namespace:       flux-system
+URL:             ssh://git@github.com/maximilianou/weekly67-1
+Branch:          main
+Revision:        main@sha1:f1f1bac07db4cf899c9b667c308357c24f3dabef
+Status:          Last reconciled at 2023-12-19 12:35:16 +0100 CET
+Message:         stored artifact for revision 'main@sha1:f1f1bac07db4cf899c9b667c308357c24f3dabef'
+
+```
+
+
+```sh
+┌──(kali㉿kali)-[~]
+└─$ kubectl get all --namespace mywebapp
+No resources found in mywebapp namespace.
+
+```
+
+> Reference:
+> tls: failed to verify certificate: x509: certificate signed by unknown authority
+> <https://github.com/kubernetes/ingress-nginx/issues/5968>
+
+```sh
+
+┌──(kali㉿kali)-[~/projects/weekly67-1]
+└─$ CA=$(kubectl -n ingress-system get secret ingress-nginx-admission -ojsonpath='{.data.ca}')
+kubectl patch validatingwebhookconfigurations ingress-nginx-admission --type='json' -p='[{"op": "add", "path": "/webhooks/0/clientConfig/caBundle", "value":"'$CA'"}]'
+
+```
+
+```sh
+git add .
+git commit -m "fix: bug reference https://github.com/kubernetes/ingress-nginx/issues/5968 "
+git push
+```
+
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67-1]
+└─$ flux trace namespace mywebapp
+
+Object:          Namespace/mywebapp
+Status:          Managed by Flux
+---
+Kustomization:   app
+Namespace:       flux-system
+Path:            ./apps
+Revision:        main@sha1:bc5ab95e4c13af3cdb0b7b72decddd558961d458
+Status:          Last reconciled at 2023-12-19 12:48:20 +0100 CET
+Message:         Applied revision: main@sha1:bc5ab95e4c13af3cdb0b7b72decddd558961d458
+---
+GitRepository:   flux-system
+Namespace:       flux-system
+URL:             ssh://git@github.com/maximilianou/weekly67-1
+Branch:          main
+Revision:        main@sha1:bc5ab95e4c13af3cdb0b7b72decddd558961d458
+Status:          Last reconciled at 2023-12-19 12:45:31 +0100 CET
+Message:         stored artifact for revision 'main@sha1:bc5ab95e4c13af3cdb0b7b72decddd558961d458'
+
+```
+
+
+```sh
+┌──(kali㉿kali)-[~]
+└─$ kubectl get all --namespace mywebapp
+NAME                       READY   STATUS    RESTARTS   AGE
+pod/web-798dd4ffc6-s4vlh   1/1     Running   0          6m1s
+pod/web-798dd4ffc6-pwthg   1/1     Running   0          6m1s
+pod/web-798dd4ffc6-gx8bf   1/1     Running   0          6m1s
+
+NAME          TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+service/web   ClusterIP   10.43.117.91   <none>        80/TCP    6m1s
+
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/web   3/3     3            3           6m1s
+
+NAME                             DESIRED   CURRENT   READY   AGE
+replicaset.apps/web-798dd4ffc6   3         3         3       6m1s
+
 ```
 
 
