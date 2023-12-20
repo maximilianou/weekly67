@@ -776,3 +776,443 @@ fn split_at_mut(values: &mut [i32], mid: usize) -> (&mut [i32], &mut [i32]) {
 ---
 
 ---
+
+
+- cargo generate 
+
+> cargo-generate is a developer tool to help you get up and running quickly 
+> with a new Rust project by leveraging a > pre-existing git repository as a template.
+
+https://github.com/cargo-generate/cargo-generate
+
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67/devrust/frontend-1]
+└─$ cargo install cargo-generate
+```
+
+```sh
+
+   Compiling lock_api v0.4.11
+error: failed to run custom build command for `openssl-sys v0.9.97`
+
+Caused by:
+  process didn't exit successfully: `/tmp/cargo-installKHrU63/release/build/openssl-sys-030156b7c8d3444f/build-script-main` (exit status: 101)
+
+  run pkg_config fail: Could not run `PKG_CONFIG_ALLOW_SYSTEM_CFLAGS="1" "pkg-config" "--libs" "--cflags" "openssl"`
+  The pkg-config command could not be found.
+
+  Most likely, you need to install a pkg-config package for your OS.
+  Try `apt install pkg-config`, or `yum install pkg-config`,
+  or `pkg install pkg-config`, or `apk add pkgconfig` depending on your distribution.
+
+```
+
+```sh
+
+┌──(kali㉿kali)-[~/projects/weekly67/devrust/frontend-1]
+└─$ sudo apt install pkg-config
+```
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67/devrust/frontend-1]
+└─$ cargo install cargo-generate
+```
+
+```sh
+  run pkg_config fail: `PKG_CONFIG_ALLOW_SYSTEM_CFLAGS="1" "pkg-config" "--libs" "--cflags" "openssl"` did not exit successfully: exit status: 1
+  error: could not find system library 'openssl' required by the 'openssl-sys' crate
+
+  --- stderr
+  Package openssl was not found in the pkg-config search path.
+  Perhaps you should add the directory containing `openssl.pc'
+
+
+  Could not find directory of OpenSSL installation, and this `-sys` crate cannot
+  proceed without this knowledge. If OpenSSL is installed and this crate had
+  trouble finding it,  you can set the `OPENSSL_DIR` environment variable for the
+  compilation process.
+
+  Make sure you also have the development packages of openssl installed.
+  For example, `libssl-dev` on Ubuntu or `openssl-devel` on Fedora.
+
+```
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67/devrust/frontend-1]
+└─$ apt search libssl-dev
+Sorting... Done
+Full Text Search... Done
+libssl-dev/kali-rolling 3.0.11-1 amd64
+  Secure Sockets Layer toolkit - development files
+
+
+┌──(kali㉿kali)-[~/projects/weekly67/devrust/frontend-1]
+└─$ apt search libssl-dev     
+```
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67/devrust/frontend-1]
+└─$ cargo install cargo-generate
+
+
+   Compiling cargo-generate v0.19.0
+    Finished release [optimized] target(s) in 10m 46s
+  Installing /home/kali/.cargo/bin/cargo-generate
+   Installed package `cargo-generate v0.19.0` (executable `cargo-generate`)
+```
+
+
+
+https://yew.rs/docs/getting-started/build-a-sample-app
+
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67/devrust/frontend-1]
+└─$ cargo generate --git https://github.com/yewstack/yew-trunk-minimal-template 
+🤷   Project Name: webrust
+🔧   Destination: /home/kali/projects/weekly67/devrust/frontend-1/webrust ...
+🔧   project-name: webrust ...
+🔧   Generating template ...
+🔧   Moving generated files into: `/home/kali/projects/weekly67/devrust/frontend-1/webrust`...
+🔧   Initializing a fresh Git repository
+✨   Done! New project created /home/kali/projects/weekly67/devrust/frontend-1/webrust
+```
+
+
+
+```sh
+┌──(kali㉿kali)-[~/…/weekly67/devrust/frontend-1/webrust]
+└─$ cargo run                
+
+   Compiling trunk-template v0.1.0 (/home/kali/projects/weekly67/devrust/frontend-1/webrust)
+    Finished dev [unoptimized + debuginfo] target(s) in 1m 45s
+     Running `target/debug/trunk-template`
+thread 'main' panicked at /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/js-sys-0.3.64/src/lib.rs:5847:9:
+cannot call wasm-bindgen imported functions on non-wasm targets
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+```
+
+```sh
+┌──(kali㉿kali)-[~/…/weekly67/devrust/frontend-1/webrust]
+└─$ RUST_BACKTRACE=1 cargo run
+    Finished dev [unoptimized + debuginfo] target(s) in 0.18s
+     Running `target/debug/trunk-template`
+thread 'main' panicked at /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/js-sys-0.3.64/src/lib.rs:5847:9:
+cannot call wasm-bindgen imported functions on non-wasm targets
+stack backtrace:
+   0: std::panicking::begin_panic
+             at /rustc/cc66ad468955717ab92600c770da8c1601a4ff33/library/std/src/panicking.rs:627:12
+   1: js_sys::global::get_global_object::Global::get_self::__wbg_self_1ff1d729e9aae938
+             at /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/js-sys-0.3.64/src/lib.rs:5847:9
+   2: js_sys::global::get_global_object::Global::get_self
+             at /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/js-sys-0.3.64/src/lib.rs:5847:9
+   3: js_sys::global::get_global_object
+             at /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/js-sys-0.3.64/src/lib.rs:5866:29
+   4: js_sys::global::GLOBAL::__init
+             at /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/js-sys-0.3.64/src/lib.rs:5825:43
+   5: js_sys::global::GLOBAL::__getit::{{closure}}
+             at /rustc/cc66ad468955717ab92600c770da8c1601a4ff33/library/std/src/sys/common/thread_local/fast_local.rs:99:25
+   6: std::sys::common::thread_local::lazy::LazyKeyInner<T>::initialize
+             at /rustc/cc66ad468955717ab92600c770da8c1601a4ff33/library/std/src/sys/common/thread_local/mod.rs:54:25
+   7: std::sys::common::thread_local::fast_local::Key<T>::try_initialize
+             at /rustc/cc66ad468955717ab92600c770da8c1601a4ff33/library/std/src/sys/common/thread_local/fast_local.rs:190:27
+   8: std::sys::common::thread_local::fast_local::Key<T>::get
+             at /rustc/cc66ad468955717ab92600c770da8c1601a4ff33/library/std/src/sys/common/thread_local/fast_local.rs:173:25
+   9: js_sys::global::GLOBAL::__getit
+             at /rustc/cc66ad468955717ab92600c770da8c1601a4ff33/library/std/src/sys/common/thread_local/fast_local.rs:91:21
+  10: std::thread::local::LocalKey<T>::try_with
+             at /rustc/cc66ad468955717ab92600c770da8c1601a4ff33/library/std/src/thread/local.rs:269:32
+  11: std::thread::local::LocalKey<T>::with
+             at /rustc/cc66ad468955717ab92600c770da8c1601a4ff33/library/std/src/thread/local.rs:246:9
+  12: js_sys::global
+             at /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/js-sys-0.3.64/src/lib.rs:5827:12
+  13: web_sys::window
+             at /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/web-sys-0.3.64/src/lib.rs:31:5
+  14: gloo_utils::window
+             at /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gloo-utils-0.1.7/src/lib.rs:14:5
+  15: gloo_utils::document
+             at /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gloo-utils-0.1.7/src/lib.rs:26:5
+  16: yew::renderer::Renderer<COMP>::with_props
+             at /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/yew-0.20.0/src/renderer.rs:76:13
+  17: <yew::renderer::Renderer<COMP> as core::default::Default>::default
+             at /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/yew-0.20.0/src/renderer.rs:49:9
+  18: yew::renderer::Renderer<COMP>::new
+             at /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/yew-0.20.0/src/renderer.rs:60:9
+  19: trunk_template::main
+             at ./src/main.rs:6:5
+  20: core::ops::function::FnOnce::call_once
+             at /rustc/cc66ad468955717ab92600c770da8c1601a4ff33/library/core/src/ops/function.rs:250:5
+note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
+```
+
+
+https://github.com/rustwasm/wasm-bindgen/issues/2859#issuecomment-1100208359
+
+
+> This is because you're trying to run your app in a non-wasm environment. Remember, cargo run is not used to run a 
+> wasm app. Depending upon what your app is, you can use either wasm-pack or trunk to build and run it. Also see the
+> wasm-bindgen book.
+
+
+
+```sh
+┌──(kali㉿kali)-[~/…/weekly67/devrust/frontend-1/webrust]
+└─$ cargo install trunk    
+
+   Compiling trunk v0.18.2
+    Finished release [optimized] target(s) in 14m 55s
+  Installing /home/kali/.cargo/bin/trunk
+   Installed package `trunk v0.18.2` (executable `trunk`)
+```
+
+
+```sh
+┌──(kali㉿kali)-[~/…/weekly67/devrust/frontend-1/webrust]
+└─$ trunk serve
+
+   Compiling cfg-if v1.0.0
+error[E0463]: can't find crate for `core`
+  |
+  = note: the `wasm32-unknown-unknown` target may not be installed
+  = help: consider downloading the target with `rustup target add wasm32-unknown-unknown`
+
+error[E0463]: can't find crate for `compiler_builtins`
+
+For more information about this error, try `rustc --explain E0463`.
+error: could not compile `cfg-if` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+2023-12-20T10:13:04.790679Z ERROR ❌ error
+error from build pipeline
+
+Caused by:
+    0: error from asset pipeline
+    1: error during cargo build execution
+    2: cargo call to executable 'cargo' with args: '["build", "--target=wasm32-unknown-unknown", "--manifest-path", "/home/kali/projects/weekly67/devrust/frontend-1/webrust/Cargo.toml"]' returned a bad status: exit status: 101
+```
+
+```sh
+┌──(kali㉿kali)-[~/…/weekly67/devrust/frontend-1/webrust]
+└─$ cargo add compiler_builtins
+    Updating crates.io index
+      Adding compiler_builtins v0.1.105 to dependencies.
+             Features:
+             + compiler-builtins
+             - c
+             - cc
+             - core
+             - mangled-names
+             - mem
+             - no-asm
+             - public-test-deps
+             - rustc-dep-of-std
+             - weak-intrinsics
+    Updating crates.io index
+```
+
+
+```sh
+┌──(kali㉿kali)-[~/…/weekly67/devrust/frontend-1/webrust]
+└─$ rustup update    
+
+```
+
+```sh
+┌──(kali㉿kali)-[~/…/weekly67/devrust/frontend-1/webrust]
+└─$ cargo run                                                     
+   Compiling proc-macro2 v1.0.66
+   Compiling unicode-ident v1.0.11
+   Compiling wasm-bindgen-shared v0.2.87
+   Compiling log v0.4.19
+   Compiling bumpalo v3.13.0
+   Compiling wasm-bindgen v0.2.87
+   Compiling cfg-if v1.0.0
+   Compiling autocfg v1.1.0
+   Compiling serde v1.0.171
+   Compiling itoa v1.0.9
+   Compiling futures-core v0.3.28
+   Compiling serde_json v1.0.103
+   Compiling ryu v1.0.15
+   Compiling quote v1.0.31
+   Compiling futures-channel v0.3.28
+   Compiling thiserror v1.0.43
+   Compiling syn v2.0.26
+   Compiling pin-project-lite v0.2.10
+   Compiling futures-sink v0.3.28
+   Compiling version_check v0.9.4
+   Compiling slab v0.4.8
+   Compiling memchr v2.5.0
+   Compiling futures-task v0.3.28
+   Compiling futures-util v0.3.28
+   Compiling syn v1.0.109
+   Compiling proc-macro-error-attr v1.0.4
+   Compiling tokio v1.29.1
+   Compiling pin-utils v0.1.0
+   Compiling libc v0.2.147
+   Compiling futures-io v0.3.28
+   Compiling percent-encoding v2.3.0
+   Compiling rustversion v1.0.14
+   Compiling form_urlencoded v1.2.0
+   Compiling proc-macro-error v1.0.4
+   Compiling indexmap v1.9.3
+   Compiling prettyplease v0.1.25
+   Compiling bytes v1.4.0
+   Compiling fnv v1.0.7
+   Compiling http v0.2.9
+   Compiling wasm-bindgen-backend v0.2.87
+   Compiling wasm-bindgen-macro-support v0.2.87
+   Compiling serde_derive v1.0.171
+   Compiling thiserror-impl v1.0.43
+   Compiling wasm-bindgen-macro v0.2.87
+   Compiling futures-macro v0.3.28
+   Compiling js-sys v0.3.64
+   Compiling pin-project-internal v1.1.2
+   Compiling pin-project v1.1.2
+   Compiling web-sys v0.3.64
+   Compiling wasm-bindgen-futures v0.4.37
+   Compiling anymap2 v0.13.0
+   Compiling hashbrown v0.12.3
+   Compiling futures v0.3.28
+   Compiling pinned v0.1.0
+   Compiling num_cpus v1.16.0
+   Compiling gloo-timers v0.2.6
+   Compiling tracing-attributes v0.1.26
+   Compiling tokio-stream v0.1.14
+   Compiling bincode v1.3.3
+   Compiling serde-wasm-bindgen v0.5.0
+   Compiling serde_urlencoded v0.7.1
+   Compiling tracing-core v0.1.31
+   Compiling boolinator v2.4.0
+   Compiling compiler_builtins v0.1.105
+   Compiling tracing v0.1.37
+   Compiling yew-macro v0.20.0
+   Compiling gloo-utils v0.1.7
+   Compiling gloo-events v0.1.2
+   Compiling gloo-console v0.2.3
+   Compiling gloo-worker v0.2.1
+   Compiling gloo-file v0.2.3
+   Compiling gloo-history v0.1.4
+   Compiling gloo-net v0.3.0
+   Compiling gloo-storage v0.2.2
+   Compiling gloo-render v0.1.1
+   Compiling gloo-dialogs v0.1.1
+   Compiling gloo v0.8.1
+   Compiling prokio v0.1.0
+   Compiling implicit-clone v0.3.5
+   Compiling console_error_panic_hook v0.1.7
+error[E0554]: `#![feature]` may not be used on the stable release channel
+ --> /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/compiler_builtins-0.1.105/src/lib.rs:2:38
+  |
+2 | #![cfg_attr(not(feature = "no-asm"), feature(asm))]
+  |                                      ^^^^^^^^^^^^
+
+error[E0554]: `#![feature]` may not be used on the stable release channel
+ --> /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/compiler_builtins-0.1.105/src/lib.rs:3:1
+  |
+3 | #![feature(abi_unadjusted)]
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0554]: `#![feature]` may not be used on the stable release channel
+ --> /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/compiler_builtins-0.1.105/src/lib.rs:4:1
+  |
+4 | #![feature(asm_experimental_arch)]
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0554]: `#![feature]` may not be used on the stable release channel
+ --> /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/compiler_builtins-0.1.105/src/lib.rs:5:38
+  |
+5 | #![cfg_attr(not(feature = "no-asm"), feature(global_asm))]
+  |                                      ^^^^^^^^^^^^^^^^^^^
+
+error[E0554]: `#![feature]` may not be used on the stable release channel
+ --> /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/compiler_builtins-0.1.105/src/lib.rs:6:1
+  |
+6 | #![feature(cfg_target_has_atomic)]
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0554]: `#![feature]` may not be used on the stable release channel
+ --> /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/compiler_builtins-0.1.105/src/lib.rs:7:1
+  |
+7 | #![feature(compiler_builtins)]
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0554]: `#![feature]` may not be used on the stable release channel
+ --> /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/compiler_builtins-0.1.105/src/lib.rs:8:1
+  |
+8 | #![feature(core_ffi_c)]
+  | ^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0554]: `#![feature]` may not be used on the stable release channel
+ --> /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/compiler_builtins-0.1.105/src/lib.rs:9:1
+  |
+9 | #![feature(core_intrinsics)]
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0554]: `#![feature]` may not be used on the stable release channel
+  --> /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/compiler_builtins-0.1.105/src/lib.rs:10:1
+   |
+10 | #![feature(inline_const)]
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0554]: `#![feature]` may not be used on the stable release channel
+  --> /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/compiler_builtins-0.1.105/src/lib.rs:11:1
+   |
+11 | #![feature(lang_items)]
+   | ^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0554]: `#![feature]` may not be used on the stable release channel
+  --> /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/compiler_builtins-0.1.105/src/lib.rs:12:1
+   |
+12 | #![feature(linkage)]
+   | ^^^^^^^^^^^^^^^^^^^^
+
+error[E0554]: `#![feature]` may not be used on the stable release channel
+  --> /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/compiler_builtins-0.1.105/src/lib.rs:13:1
+   |
+13 | #![feature(naked_functions)]
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0554]: `#![feature]` may not be used on the stable release channel
+  --> /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/compiler_builtins-0.1.105/src/lib.rs:14:1
+   |
+14 | #![feature(repr_simd)]
+   | ^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0554]: `#![feature]` may not be used on the stable release channel
+ --> /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/compiler_builtins-0.1.105/src/lib.rs:2:46
+  |
+2 | #![cfg_attr(not(feature = "no-asm"), feature(asm))]
+  |                                              ^^^
+
+error[E0554]: `#![feature]` may not be used on the stable release channel
+ --> /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/compiler_builtins-0.1.105/src/lib.rs:5:46
+  |
+5 | #![cfg_attr(not(feature = "no-asm"), feature(global_asm))]
+  |                                              ^^^^^^^^^^
+
+error[E0554]: `#![feature]` may not be used on the stable release channel
+ --> /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/compiler_builtins-0.1.105/src/lib.rs:8:12
+  |
+8 | #![feature(core_ffi_c)]
+  |            ^^^^^^^^^^
+
+error[E0554]: `#![feature]` may not be used on the stable release channel
+ --> /home/kali/.cargo/registry/src/index.crates.io-6f17d22bba15001f/compiler_builtins-0.1.105/src/lib.rs:9:12
+  |
+9 | #![feature(core_intrinsics)]
+  |            ^^^^^^^^^^^^^^^
+
+For more information about this error, try `rustc --explain E0554`.
+error: could not compile `compiler_builtins` (lib) due to 17 previous errors
+warning: build failed, waiting for other jobs to finish...
+```
+
+
+```rs
+
+```
+
+
+
+
+---

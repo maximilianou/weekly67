@@ -1110,12 +1110,62 @@ replicaset.apps/web-798dd4ffc6   3         3         3       6m1s
 ```
 
 
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67-1]
+└─$ flux trace namespace ingress-system
+
+Object:          Namespace/ingress-system
+Status:          Managed by Flux
+---
+Kustomization:   infrastructure
+Namespace:       flux-system
+Path:            ./infrastructure
+Revision:        main@sha1:f0a6f108950e642f1752670b50884802cf8563b6
+Status:          Last reconciled at 2023-12-19 14:50:24 +0100 CET
+Message:         Applied revision: main@sha1:f0a6f108950e642f1752670b50884802cf8563b6
+---
+GitRepository:   flux-system
+Namespace:       flux-system
+URL:             ssh://git@github.com/maximilianou/weekly67-1
+Branch:          main
+Revision:        main@sha1:f0a6f108950e642f1752670b50884802cf8563b6
+Status:          Last reconciled at 2023-12-19 12:48:42 +0100 CET
+Message:         stored artifact for revision 'main@sha1:f0a6f108950e642f1752670b50884802cf8563b6'
+                                                                                                                                                                                             
+┌──(kali㉿kali)-[~/projects/weekly67-1]
+└─$ flux trace namespace flux-system   
+
+Object:          Namespace/flux-system
+Status:          Managed by Flux
+---
+Kustomization:   flux-system
+Namespace:       flux-system
+Path:            ./fleet/default
+Revision:        main@sha1:f0a6f108950e642f1752670b50884802cf8563b6
+Status:          Last reconciled at 2023-12-19 14:44:35 +0100 CET
+Message:         Applied revision: main@sha1:f0a6f108950e642f1752670b50884802cf8563b6
+---
+GitRepository:   flux-system
+Namespace:       flux-system
+URL:             ssh://git@github.com/maximilianou/weekly67-1
+Branch:          main
+Revision:        main@sha1:f0a6f108950e642f1752670b50884802cf8563b6
+Status:          Last reconciled at 2023-12-19 12:48:42 +0100 CET
+Message:         stored artifact for revision 'main@sha1:f0a6f108950e642f1752670b50884802cf8563b6'
+                                                                                                       
+```
 
 
 ----------
 
 
 
+
+
+
+
+
+----------
 
 
 
