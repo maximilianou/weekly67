@@ -1,6 +1,9 @@
 
+- Reference: 
 
 https://github.com/vercel/next-learn/tree/main/dashboard/starter-example
+
+- Create Next project
 
 ```sh
 ┌──(kali㉿kali)-[~/projects/weekly67/devjs]
@@ -26,6 +29,8 @@ To see a list of supported npm commands, run:
 ✔ Would you like to customize the default import alias (@/*)? … No / Yes
 Creating a new Next.js app in /home/kali/projects/weekly67/devjs/front1/front1.
 ```
+
+- Run Project
 
 ```sh
 ┌──(kali㉿kali)-[~/…/weekly67/devjs/front1/front1]
