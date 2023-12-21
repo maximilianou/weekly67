@@ -1534,8 +1534,12 @@ namespace-test-system   Active   8m2s
 
 ----------
 
+https://docs.gitlab.com/ee/user/packages/container_registry/build_and_push_images.html
 
 
+
+
+----------
 
 
 
