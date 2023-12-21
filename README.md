@@ -846,6 +846,9 @@ flux logs --all-namespaces
 
 ### GitOps - FluxCD Functional New Repository weekly67-1
 
+--------------------
+--------------------
+
 ```sh 
 ┌──(kali㉿kali)-[~/projects/weekly67]
 └─$ echo $GITHUB_TOKEN | flux bootstrap github --owner=maximilianou --repository=weekly67-1 --path=fleet/default --personal 
@@ -1159,13 +1162,373 @@ Message:         stored artifact for revision 'main@sha1:f0a6f108950e642f1752670
 ----------
 ----------
 
-- weekly67-2
+### weekly67-2
+
+- kubernetes
+
+```sh
+┌──(kali㉿kali)-[~]
+└─$ /usr/local/bin/k3s-uninstall.sh
+```
 
 
+```sh
+┌──(kali㉿kali)-[~]
+└─$ ps aux | grep k3s
+kali       23673  0.0  0.0   6344  2176 pts/0    S+   09:56   0:00 grep --color=auto k3s
+
+```
+
+```sh
+┌──(kali㉿kali)-[~]
+└─$ curl -sfL https://get.k3s.io | sh -                           
+[INFO]  Installing k3s to /usr/local/bin/k3s
+[INFO]  Creating /usr/local/bin/kubectl symlink to k3s
+[INFO]  Creating /usr/local/bin/crictl symlink to k3s
+[INFO]  Skipping /usr/local/bin/ctr symlink to k3s, command exists in PATH at /usr/bin/ctr
+[INFO]  Creating killall script /usr/local/bin/k3s-killall.sh
+[INFO]  Creating uninstall script /usr/local/bin/k3s-uninstall.sh
+[INFO]  env: Creating environment file /etc/systemd/system/k3s.service.env
+[INFO]  systemd: Creating service file /etc/systemd/system/k3s.service
+Created symlink /etc/systemd/system/multi-user.target.wants/k3s.service → /etc/systemd/system/k3s.service.
+[INFO]  systemd: Starting k3s
+
+```
+
+```sh
+┌──(kali㉿kali)-[~]
+└─$ kubectl get all -A                          
+E1221 10:07:25.717654   32023 memcache.go:265] couldn't get current server API group list: Get "https://127.0.0.1:6443/api?timeout=32s": tls: failed to verify certificate: x509: certificate signed by unknown authority
+```
+
+```sh
+┌──(kali㉿kali)-[~]
+└─$ sudo cat /etc/rancher/k3s/k3s.yaml > ~/.kube/config
+```
+
+```sh
+┌──(kali㉿kali)-[~]
+└─$ kubectl get all -A
+NAMESPACE     NAME                                          READY   STATUS      RESTARTS   AGE
+kube-system   pod/local-path-provisioner-84db5d44d9-rcghq   1/1     Running     0          6m46s
+```
+
+- FluxCD
+
+```sh
+┌──(kali㉿kali)-[~]
+└─$ echo $GITHUB_TOKEN | flux bootstrap github --owner=maximilianou --repository=weekly67-2 --path=kube01/default --personal
+✔ all components are healthy
+```
+
+```sh
+┌──(kali㉿kali)-[~/projects]
+└─$ git clone https://github.com/maximilianou/weekly67-2
+```
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67-2]
+└─$ tree       
+.
+└── kube01
+    └── default
+        └── flux-system
+            ├── gotk-components.yaml
+            ├── gotk-sync.yaml
+            └── kustomization.yaml
+```
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67-2]
+└─$ mkdir apps  
+
+┌──(kali㉿kali)-[~/projects/weekly67-2]
+└─$ mkdir infrastructura
+```
+
+```sh
+┌──(kali㉿kali)-[~]
+└─$ flux get sources git
+NAME            REVISION                SUSPENDED       READY   MESSAGE                                           
+flux-system     main@sha1:3302ab5e      False           True    stored artifact for revision 'main@sha1:3302ab5e'
+```
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67-2]
+└─$ tree                                   
+.
+├── apps
+├── infrastructure
+└── kube01
+    └── default
+        ├── apps.yml
+        ├── flux-system
+        │   ├── gotk-components.yaml
+        │   ├── gotk-sync.yaml
+        │   └── kustomization.yaml
+        └── infrascructure.yml
+```
+
+```yml
+# kube01/default/apps.yml
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: app
+  namespace: flux-system
+spec:
+  interval: 1m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./apps
+  prune: true
+```
+
+```yml
+# kube01/default/infrastructure.yml
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: infrastructure
+  namespace: flux-system
+spec:
+  interval: 1m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./infrastructure
+  prune: true
+```
+
+```sh
+┌──(kali㉿kali)-[~]
+└─$ kubectl get all --namespace flux-system
+NAME                                          READY   STATUS    RESTARTS   AGE
+pod/source-controller-6c49485888-726cv        1/1     Running   0          60m
+pod/notification-controller-76dc5d768-x7jcd   1/1     Running   0          60m
+pod/helm-controller-5f964c6579-8w4s9          1/1     Running   0          60m
+pod/kustomize-controller-9c588946c-wbgc7      1/1     Running   0          60m
+
+NAME                              TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+service/notification-controller   ClusterIP   10.43.130.187   <none>        80/TCP    60m
+service/source-controller         ClusterIP   10.43.236.92    <none>        80/TCP    60m
+service/webhook-receiver          ClusterIP   10.43.94.126    <none>        80/TCP    60m
+
+NAME                                      READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/helm-controller           1/1     1            1           60m
+deployment.apps/kustomize-controller      1/1     1            1           60m
+deployment.apps/notification-controller   1/1     1            1           60m
+deployment.apps/source-controller         1/1     1            1           60m
+
+NAME                                                DESIRED   CURRENT   READY   AGE
+replicaset.apps/source-controller-6c49485888        1         1         1       60m
+replicaset.apps/notification-controller-76dc5d768   1         1         1       60m
+replicaset.apps/helm-controller-5f964c6579          1         1         1       60m
+replicaset.apps/kustomize-controller-9c588946c      1         1         1       60m
+```
+
+- metallb
 
 
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67-2]
+└─$ curl https://raw.githubusercontent.com/metallb/metallb/v0.13.12/config/manifests/metallb-native.yaml > infrastructure/metallb/metallb-native.yml
+```
+
+```yml
+# infra/metallb-ipaddr.yml
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: first-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 192.168.106.150-192.168.106.170
+```
+
+```yml
+# infra/metallb-L2adv.yml
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: metallb-l2adv
+  namespace: metallb-system
+```
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67-2]
+└─$ cat infrastructure/metallb/metallb-native.yml | grep namespace
+          namespace: metallb-system
+```
+
+```sh
+┌──(kali㉿kali)-[~]
+└─$ flux trace namespace metallb-system
+✗ x: namespaces "metallb-system" not found
+
+```
+
+```sh
+┌──(kali㉿kali)-[~]
+└─$ flux tree kustomization flux-system --compact
+Kustomization/flux-system/flux-system
+└── GitRepository/flux-system/flux-system
+
+```
 
 
+- Reconcile FluxCD system
+```sh
+┌──(kali㉿kali)-[~]
+└─$ flux reconcile source git flux-system        
+► annotating GitRepository flux-system in flux-system namespace
+✔ GitRepository annotated
+◎ waiting for GitRepository reconciliation
+✔ fetched revision main@sha1:94c7fdb14d9f005d88ce8f848fdeaf79012f694f
+
+```
+
+```sh
+┌──(kali㉿kali)-[~]
+└─$ kubectl get ns    
+NAME              STATUS   AGE
+kube-system       Active   113m
+kube-public       Active   113m
+kube-node-lease   Active   113m
+default           Active   113m
+flux-system       Active   104m
+ingress-system    Active   79s
+metallb-system    Active   79s
+
+```
+
+
+```sh
+┌──(kali㉿kali)-[~]
+└─$ kubectl get all --namespace metallb-system
+NAME                              READY   STATUS    RESTARTS   AGE
+pod/controller-786f9df989-8nv2q   1/1     Running   0          2m20s
+pod/speaker-fkdhq                 1/1     Running   0          2m20s
+
+NAME                      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+service/webhook-service   ClusterIP   10.43.201.131   <none>        443/TCP   2m20s
+
+NAME                     DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
+daemonset.apps/speaker   1         1         1       1            1           kubernetes.io/os=linux   2m20s
+
+NAME                         READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/controller   1/1     1            1           2m20s
+
+NAME                                 W   DESIRED   CURRENT   READY   AGE
+replicaset.apps/controller-786f9df989   1         1         1       2m20s
+
+```
+
+```sh
+┌──(kali㉿kali)-[~]
+└─$ kubectl get svc -A
+NAMESPACE        NAME                      TYPE           CLUSTER-IP      EXTERNAL-IP       PORT(S)                      AGE
+default          kubernetes                ClusterIP      10.43.0.1       <none>            443/TCP                      117m
+kube-system      kube-dns                  ClusterIP      10.43.0.10      <none>            53/UDP,53/TCP,9153/TCP       117m
+kube-system      metrics-server            ClusterIP      10.43.52.13     <none>            443/TCP                      117m
+flux-system      notification-controller   ClusterIP      10.43.130.187   <none>            80/TCP                       107m
+flux-system      source-controller         ClusterIP      10.43.236.92    <none>            80/TCP                       107m
+flux-system      webhook-receiver          ClusterIP      10.43.94.126    <none>            80/TCP                       107m
+metallb-system   webhook-service           ClusterIP      10.43.201.131   <none>            443/TCP                      4m45s
+kube-system      traefik                   LoadBalancer   10.43.46.34     192.168.106.150   80:30627/TCP,443:30956/TCP   116m
+
+```
+
+
+- Reconcile FluxCD source git flus-system
+```sh
+┌──(kali㉿kali)-[~]
+└─$ flux reconcile source git flux-system
+► annotating GitRepository flux-system in flux-system namespace
+✔ GitRepository annotated
+◎ waiting for GitRepository reconciliation
+✔ fetched revision main@sha1:996d7e60df3628f9e4bf02d7184bb1da1eba7baf
+
+```
+
+```sh
+┌──(kali㉿kali)-[~]
+└─$ kubectl get all --namespace ingress-system
+NAME                                            READY   STATUS      RESTARTS   AGE
+pod/ingress-nginx-controller-6fcf745c45-pbm9k   1/1     Running     0          35s
+pod/ingress-nginx-admission-patch-fxxbh         0/1     Completed   0          4s
+
+NAME                                         TYPE           CLUSTER-IP     EXTERNAL-IP       PORT(S)                      AGE
+service/ingress-nginx-controller-admission   ClusterIP      10.43.56.8     <none>            443/TCP                      35s
+service/ingress-nginx-controller             LoadBalancer   10.43.68.236   192.168.106.151   80:31916/TCP,443:31424/TCP   35s
+
+NAME                                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/ingress-nginx-controller   1/1     1            1           35s
+
+NAME                                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/ingress-nginx-controller-6fcf745c45   1         1         1       35s
+
+NAME                                      COMPLETIONS   DURATION   AGE
+job.batch/ingress-nginx-admission-patch   0/1           4s         4s
+
+```
+
+- test reconcile automatic over time
+
+```yml
+# infra/ns/ns.yml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: namespace-test-system
+```
+
+```sh
+git add .
+git commit 
+git push
+```
+
+```sh
+┌──(kali㉿kali)-[~]
+└─$ kubectl get ns                            
+NAME                    STATUS   AGE
+namespace-test-system   Active   3m46s
+```
+
+- Commenting the content didn't undeploy with FluxCD automatic reconcile
+```yml
+# infra/ns/ns.yml
+#apiVersion: v1
+#kind: Namespace
+#metadata:
+#  name: namespace-test-system
+```
+
+```sh
+git add
+git commit
+git push
+```
+
+```sh
+┌──(kali㉿kali)-[~]
+└─$ kubectl get ns
+namespace-test-system   Active   8m2s
+```
+
+- Delete the file to Undeploy with FluxCD automatic reconcile
+```sh
+┌──(kali㉿kali)-[~/projects]
+└─$ rm weekly67-2/infra/ns/ns.yml
+```
+
+```sh
+┌──(kali㉿kali)-[~/projects]
+└─$ kubectl get ns
+```
 
 
 ----------
@@ -1174,3 +1537,5 @@ Message:         stored artifact for revision 'main@sha1:f0a6f108950e642f1752670
 
 
 
+----------
+----------
