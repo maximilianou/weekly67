@@ -844,7 +844,7 @@ flux logs --all-namespaces
 --------------------
 --------------------
 
-
+### GitOps - FluxCD Functional New Repository weekly67-1
 
 ```sh 
 ┌──(kali㉿kali)-[~/projects/weekly67]
@@ -1157,6 +1157,9 @@ Message:         stored artifact for revision 'main@sha1:f0a6f108950e642f1752670
 
 
 ----------
+----------
+
+- weekly67-2
 
 
 
