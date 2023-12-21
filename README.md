@@ -609,7 +609,7 @@ Please enter your GitHub personal access token (PAT):
 ✗ context "staging" does not exist
 ```
 
-<https://www.airplane.dev/blog/kubectl-config-set-context-tutorial-and-best-practices>
+https://www.airplane.dev/blog/kubectl-config-set-context-tutorial-and-best-practices
 
 - kubernetes Context
 
@@ -911,7 +911,7 @@ flux-system     main@sha1:ceb2e2ac      False           True    stored artifact 
 
 Reference: step by step guide to see Logs or status
 
-<https://managedkube.com/gitops/flux/weaveworks/guide/tutorial/2020/05/01/a-complete-step-by-step-guide-to-implementing-a-gitops-workflow-with-flux.html>
+https://managedkube.com/gitops/flux/weaveworks/guide/tutorial/2020/05/01/a-complete-step-by-step-guide-to-implementing-a-gitops-workflow-with-flux.html
 
 
 https://fluxcd.io/flux/monitoring/logs/
@@ -1051,7 +1051,7 @@ No resources found in mywebapp namespace.
 
 > Reference:
 > tls: failed to verify certificate: x509: certificate signed by unknown authority
-> <https://github.com/kubernetes/ingress-nginx/issues/5968>
+> https://github.com/kubernetes/ingress-nginx/issues/5968
 
 ```sh
 
@@ -1532,6 +1532,9 @@ namespace-test-system   Active   8m2s
 
 
 ----------
+
+
+
 
 
 
