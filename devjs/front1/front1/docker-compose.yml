@@ -1,0 +1,17 @@
+# front1/docker-compose.yml
+# docker compose build   
+# docker compose up
+version: '3.8'
+services:
+  web:
+    image: front1
+    build:
+      context: ./
+      target: dev
+      dockerfile: Dockerfile
+    volumes:
+        - .:/app
+        - /app/node_modules
+        - /app/.next
+    ports:
+      - "3040:3000"
