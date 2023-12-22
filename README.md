@@ -1534,13 +1534,562 @@ namespace-test-system   Active   8m2s
 
 ----------
 
+
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67-2]
+└─$ flux get all -A     
+NAMESPACE       NAME                            REVISION                SUSPENDED       READY   MESSAGE                                           
+flux-system     gitrepository/flux-system       main@sha1:2fd679b0      False           True    stored artifact for revision 'main@sha1:2fd679b0'
+
+NAMESPACE       NAME                            REVISION        SUSPENDED       READY   MESSAGE                                     
+flux-system     helmrepository/ingress-nginx    sha256:e6a6c9e8 False           True    stored artifact: revision 'sha256:e6a6c9e8'
+
+NAMESPACE       NAME                                    REVISION        SUSPENDED       READY   MESSAGE                                            
+flux-system     helmchart/ingress-system-ingress-nginx  4.0.13          False           True    pulled 'ingress-nginx' chart with version '4.0.13'
+
+NAMESPACE       NAME                            REVISION        SUSPENDED       READY   MESSAGE                          
+ingress-system  helmrelease/ingress-nginx       4.0.13          False           True    Release reconciliation succeeded
+
+NAMESPACE       NAME                            REVISION                SUSPENDED       READY   MESSAGE                                                                                    
+flux-system     kustomization/flux-system       main@sha1:2fd679b0      False           True    Applied revision: main@sha1:2fd679b0                                                      
+flux-system     kustomization/infra             main@sha1:2fd679b0      False           True    Applied revision: main@sha1:2fd679b0                                                      
+flux-system     kustomization/apps                                      False           False   Deployment/app-a namespace not specified: the server could not find the requested resource
+
+```
+
+
+
+------
+
+- apps.yml
+- apps/ans/app-a-ns.yml
+```yml
+# apps/app-ns.yml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: app-a
+```
+- apps/ans/app-a.yml
+```yml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-a
+  namespace: app-a
+  labels:
+    app: app-a
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-a
+  template:
+    metadata:
+      labels:
+        app: app-a
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-a
+  namespace: app-a
+spec:
+  selector:
+    app: app-a
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+```
+- apps/ans/app-a-ingress.yml
+```yml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-resource
+  namespace: app-a
+#  annotations:
+#    cert-manager.io/cluster-issuer: letsencrypt-staging
+spec:
+  ingressClassName: nginx
+#  tls:
+#  - hosts:
+#    - a.kube.simpledoers.work
+#    secretName: letsencrypt-staging
+  rules:
+  - host: a.kube
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: app-a
+            port:
+              number: 80
+```
+
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67-2]
+└─$ flux reconcile source git flux-system
+► annotating GitRepository flux-system in flux-system namespace
+✔ GitRepository annotated
+◎ waiting for GitRepository reconciliation
+✔ fetched revision main@sha1:b04b3757459a15cfa2f8453058bf554d1af0e502
+
+
+┌──(kali㉿kali)-[~/projects/weekly67-2]
+└─$ flux get all -A                      
+NAMESPACE       NAME                            REVISION                SUSPENDED       READY   MESSAGE                                           
+flux-system     gitrepository/flux-system       main@sha1:b04b3757      False           True    stored artifact for revision 'main@sha1:b04b3757'
+
+NAMESPACE       NAME                            REVISION        SUSPENDED       READY   MESSAGE                                     
+flux-system     helmrepository/ingress-nginx    sha256:e6a6c9e8 False           True    stored artifact: revision 'sha256:e6a6c9e8'
+
+NAMESPACE       NAME                                    REVISION        SUSPENDED       READY   MESSAGE                                            
+flux-system     helmchart/ingress-system-ingress-nginx  4.0.13          False           True    pulled 'ingress-nginx' chart with version '4.0.13'
+
+NAMESPACE       NAME                            REVISION        SUSPENDED       READY   MESSAGE                          
+ingress-system  helmrelease/ingress-nginx       4.0.13          False           True    Release reconciliation succeeded
+
+NAMESPACE       NAME                            REVISION                SUSPENDED       READY   MESSAGE                              
+flux-system     kustomization/apps              main@sha1:b04b3757      False           True    Applied revision: main@sha1:b04b3757
+flux-system     kustomization/infra             main@sha1:b04b3757      False           True    Applied revision: main@sha1:b04b3757
+flux-system     kustomization/flux-system       main@sha1:b04b3757      False           True    Applied revision: main@sha1:b04b3757
+
+
+┌──(kali㉿kali)-[~/projects/weekly67-2]
+└─$ curl http://a.kube/
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+
+```
+https://fluxcd.io/flux/cheatsheets/troubleshooting/
+
 https://docs.gitlab.com/ee/user/packages/container_registry/build_and_push_images.html
 
 
+Reference: That DevOps Guy
+
+Github - Drone - Github action running into kubernetes.
+
+https://www.youtube.com/watch?v=myCcJJ_Fk10
 
 
 ----------
 
+https://github.com/marcel-dempers/docker-development-youtube-series/tree/master/drone-ci
+
+
+```yml
+# infra/drone/drone-ns.yml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: drone
+```
+
+```yml
+# infra/drone/drone-pgsql.yml
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: drone
+  labels:
+    app: postgres
+data:
+  POSTGRES_DB: postgresdb
+  POSTGRES_USER: postgresadmin
+  POSTGRES_PASSWORD: admin123
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: drone
+spec:
+  serviceName: "postgres"
+  selector:
+    matchLabels:
+      app: postgres
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:10.4
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: postgres-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: drone
+  labels:
+    app: postgres
+spec:
+  selector:
+    app: postgres
+  ports:
+    - protocol: TCP
+      name: http
+      port: 5432
+      targetPort: 5432
+```
+
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67-2]
+└─$ flux get all -A    
+NAMESPACE       NAME                            REVISION                SUSPENDED       READY   MESSAGE                                           
+flux-system     gitrepository/flux-system       main@sha1:b04b3757      False           True    stored artifact for revision 'main@sha1:b04b3757'
+
+NAMESPACE       NAME                            REVISION        SUSPENDED       READY   MESSAGE                                     
+flux-system     helmrepository/ingress-nginx    sha256:e6a6c9e8 False           True    stored artifact: revision 'sha256:e6a6c9e8'
+
+NAMESPACE       NAME                                    REVISION        SUSPENDED       READY   MESSAGE                                            
+flux-system     helmchart/ingress-system-ingress-nginx  4.0.13          False           True    pulled 'ingress-nginx' chart with version '4.0.13'
+
+NAMESPACE       NAME                            REVISION        SUSPENDED       READY   MESSAGE                          
+ingress-system  helmrelease/ingress-nginx       4.0.13          False           True    Release reconciliation succeeded
+
+NAMESPACE       NAME                            REVISION                SUSPENDED       READY   MESSAGE                              
+flux-system     kustomization/flux-system       main@sha1:b04b3757      False           True    Applied revision: main@sha1:b04b3757
+flux-system     kustomization/apps              main@sha1:b04b3757      False           True    Applied revision: main@sha1:b04b3757
+flux-system     kustomization/infra             main@sha1:b04b3757      False           True    Applied revision: main@sha1:b04b3757
+
+
+┌──(kali㉿kali)-[~/projects/weekly67-2]
+└─$ kubectl get ns    
+NAME              STATUS   AGE
+kube-system       Active   29h
+kube-public       Active   29h
+kube-node-lease   Active   29h
+default           Active   29h
+flux-system       Active   29h
+ingress-system    Active   27h
+metallb-system    Active   27h
+ns-test-system    Active   53m
+app-a             Active   16m
+drone             Active   10s
+
+
+┌──(kali㉿kali)-[~/projects/weekly67-2]
+└─$ kubectl get all --namespace drone
+NAME             READY   STATUS    RESTARTS   AGE
+pod/postgres-0   1/1     Running   0          41s
+
+NAME               TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
+service/postgres   ClusterIP   10.43.106.9   <none>        5432/TCP   42s
+
+NAME                        READY   AGE
+statefulset.apps/postgres   1/1     42s
+
+```
+
+
+
+```yml
+# infra/drone/droneserver-dpl.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drone-server
+  namespace: drone
+  labels:
+    app: drone-server
+  annotations:
+spec:
+  selector:
+    matchLabels:
+      app: drone-server
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: drone-server
+    spec:
+      containers:
+      - name: drone-server
+        image: drone/drone:2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        env:
+        - name: DRONE_USER_CREATE 
+          valueFrom:
+            secretKeyRef:
+              name: drone-server-secret
+              key: DRONE_USER_CREATE
+        - name: DRONE_DATABASE_DRIVER
+          value: postgres
+        - name: DRONE_DATABASE_DATASOURCE 
+          valueFrom:
+            secretKeyRef:
+              name: drone-server-secret
+              key: DRONE_DATABASE_DATASOURCE
+        - name: DRONE_SERVER_PROTO
+          value: https
+        - name: DRONE_SERVER_HOST 
+          valueFrom:
+            secretKeyRef:
+              name: drone-server-secret
+              key: DRONE_SERVER_HOST
+        - name: DRONE_GITHUB_CLIENT_ID 
+          valueFrom:
+            secretKeyRef:
+              name: drone-server-secret
+              key: DRONE_GITHUB_CLIENT_ID
+        - name: DRONE_GITHUB_CLIENT_SECRET 
+          valueFrom:
+            secretKeyRef:
+              name: drone-server-secret
+              key: DRONE_GITHUB_CLIENT_SECRET
+        - name: DRONE_RPC_SECRET 
+          valueFrom:
+            secretKeyRef:
+              name: drone-server-secret
+              key: DRONE_RPC_SECRET
+```
+
+```yml
+# infra/drone/droneserver-ing.yml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: drone-server
+  namespace: drone
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: drone.kube1
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: drone-server
+            port:
+              number: 80
+
+```
+
+
+```yml
+# infra/drone/droneserver-secret.yml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: drone-server-secret
+type: Opaque
+data:
+  DRONE_GITHUB_CLIENT_ID: xxxxxxx     #Get this from GitHub OAUTH
+  DRONE_GITHUB_CLIENT_SECRET: xxxxxxx #Get this from GitHub OAUTH
+  DRONE_RPC_SECRET: xxxxxxx           #openssl rand -hex 16
+  DRONE_DATABASE_DATASOURCE: xxxxxxx  #postgres://postgresadmin:admin123@postgres:5432/postgresdb?sslmode=disable
+  DRONE_USER_CREATE: xxxxxxx          #username:marcel-dempers,admin:true
+  DRONE_SERVER_HOST: xxxxxxx          #drone.marceldempers.dev
+```
+
+```yml
+# infra/drone/droneserver-srv.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: drone-server
+  namespace: drone
+  labels:
+    app: drone-server
+spec:
+  type: ClusterIP
+  selector:
+    app: drone-server
+  ports:
+    - protocol: TCP
+      name: http
+      port: 80
+      targetPort: 80
+    - protocol: TCP
+      name: https
+      port: 443
+      targetPort: 443
+```
+
+```yml
+# infra/drone/dronerunner-rbac.yml
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: drone
+  name: drone-runner
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/log
+  verbs:
+  - get
+  - create
+  - delete
+  - list
+  - watch
+  - update
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: drone-runner
+  namespace: drone
+subjects:
+- kind: ServiceAccount
+  name: drone-runner
+  namespace: drone
+roleRef:
+  kind: Role
+  name: drone-runner
+  apiGroup: rbac.authorization.k8s.io
+```
+
+```yml
+# infra/drone/dronerunner.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drone-runner
+  namespace: drone
+  labels:
+    app.kubernetes.io/name: drone-runner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: drone
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: drone
+    spec:
+      serviceAccountName: drone-runner
+      containers:
+      - name: runner
+        image: drone/drone-runner-kube:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DRONE_NAMESPACE_DEFAULT
+          value: drone
+        - name: DRONE_SERVICE_ACCOUNT_DEFAULT
+          value: drone-runner
+        - name: DRONE_RPC_HOST
+          value: droneserver.drone
+        - name: DRONE_RPC_PROTO
+          value: http
+        - name: DRONE_RPC_SECRET 
+          valueFrom:
+            secretKeyRef:
+              name: drone-server-secret
+              key: DRONE_RPC_SECRET
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: drone-runner
+  namespace: drone
+  labels:
+    app.kubernetes.io/name: drone-runner
+```
+
+
+```yml
+
+---
+kind: pipeline
+type: kubernetes
+name: default
+
+steps:
+- name: build-push
+  image: docker:dind
+  volumes:
+  - name: dockersock
+    path: /var/run
+  environment:
+    DOCKER_USER:
+      from_secret: DOCKER_USER
+    DOCKER_PASSWORD:
+      from_secret: DOCKER_PASSWORD
+  commands:
+  - sleep 5 ## give docker enough time to start
+  - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+  - docker build ./golang -t aimvector/golang:1.0.0
+  - docker push aimvector/golang:1.0.0
+
+services:
+- name: docker
+  image: docker:dind
+  privileged: true
+  volumes:
+  - name: dockersock
+    path: /var/run
+volumes:
+- name: dockersock
+  temp: {}
+```
 
 
 
