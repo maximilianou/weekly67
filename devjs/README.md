@@ -59,4 +59,4 @@ available via `npm run-script`:
 ```
 
 
-
+https://docs.gitlab.com/ee/user/packages/container_registry/build_and_push_images.html
