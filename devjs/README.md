@@ -5,6 +5,8 @@
 
 ---
 
+In this page we are writting down markdown to read from the nodejs mdx module and show it into the browser.
+
 - Reference: 
 
 https://github.com/vercel/next-learn/tree/main/dashboard/starter-example
