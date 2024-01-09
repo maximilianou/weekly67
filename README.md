@@ -850,6 +850,8 @@ flux logs --all-namespaces
 --------------------
 --------------------
 
+
+
 ```sh 
 ┌──(kali㉿kali)-[~/projects/weekly67]
 └─$ echo $GITHUB_TOKEN | flux bootstrap github --owner=maximilianou --repository=weekly67-1 --path=fleet/default --personal 
@@ -860,6 +862,11 @@ Please enter your GitHub personal access token (PAT):
 ✔ cloned repository
 ...
 ```
+
+
+https://github.com/maximilianou/weekly67-1/
+
+https://github.com/maximilianou/weekly67-2/
 
 ```sh
 ┌──(kali㉿kali)-[~/projects/weekly67-1]

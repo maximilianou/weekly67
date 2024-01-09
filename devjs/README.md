@@ -1,4 +1,10 @@
 
+---
+
+### README.md sample for using MDX in nextjs
+
+---
+
 - Reference: 
 
 https://github.com/vercel/next-learn/tree/main/dashboard/starter-example
