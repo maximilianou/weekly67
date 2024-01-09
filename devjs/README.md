@@ -1,4 +1,6 @@
+```
 
+```
 ---
 
 ### README.md sample for using MDX in nextjs
@@ -7,9 +9,9 @@
 
 In this page we are writting down markdown to read from the nodejs mdx module and show it into the browser.
 
-- Reference: 
+```
 
-https://github.com/vercel/next-learn/tree/main/dashboard/starter-example
+```
 
 - Create Next project
 
@@ -65,6 +67,10 @@ available via `npm run-script`:
    ▲ Next.js 14.0.4
    - Local:        http://localhost:3000
 ```
+
+- Reference: 
+
+https://github.com/vercel/next-learn/tree/main/dashboard/starter-example
 
 
 https://docs.gitlab.com/ee/user/packages/container_registry/build_and_push_images.html
