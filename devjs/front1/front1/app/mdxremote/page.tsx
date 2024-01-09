@@ -1,5 +1,5 @@
 import { MDXRemote, MDXRemoteSerializeResult } from 'next-mdx-remote/rsc'
-import { serialize } from 'next-mdx-remote/serialize'
+
 
 interface Props {
   mdxSource: MDXRemoteSerializeResult

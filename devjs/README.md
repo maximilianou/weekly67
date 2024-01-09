@@ -1,5 +1,3 @@
-|||
-|||
 
 ---
 
@@ -9,8 +7,6 @@
 
 > In this page we are writting down markdown to read from the nodejs mdx module and show it into the browser.
 
-|||
-|||
 
 - Create Next project
 
