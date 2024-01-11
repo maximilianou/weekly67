@@ -2151,5 +2151,18 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 ```
 
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67]
+└─$ docker run ghcr.io/maximilianou/weekly67
+
+Unable to find image 'ghcr.io/maximilianou/weekly67:latest' locally
+latest: Pulling from maximilianou/weekly67
+661ff4d9561e: Already exists 
+d3ae11a87360: Already exists 
+...
+```
+
+
+
 ----------
 ----------
