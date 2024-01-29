@@ -1208,9 +1208,40 @@ warning: build failed, waiting for other jobs to finish...
 ```
 
 
-```rs
+------------
+------------
+------------
 
+https://rustwasm.github.io/docs/book/game-of-life/setup.html#wasm-pack
+
+- install wasm
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67/devrust/wasmrust]
+└─$ cargo install wasm-pack        
+    Updating crates.io index
+  Downloaded wasm-pack v0.12.1
 ```
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67/devrust/wasmrust]
+└─$ cargo install wasm-pack        
+    Updating crates.io index
+  Downloaded wasm-pack v0.12.1
+```
+
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67/devrust/wasmrust]
+└─$ cargo generate --git https://github.com/rustwasm/wasm-pack-template         
+🤷   Project Name: wasm-game-of-life
+🔧   Destination: /home/kali/projects/weekly67/devrust/wasmrust/wasm-game-of-life ...
+🔧   project-name: wasm-game-of-life ...
+🔧   Generating template ...
+🔧   Moving generated files into: `/home/kali/projects/weekly67/devrust/wasmrust/wasm-game-of-life`...
+🔧   Initializing a fresh Git repository
+✨   Done! New project created /home/kali/projects/weekly67/devrust/wasmrust/wasm-game-of-life
+```
+
 
 
 
