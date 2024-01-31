@@ -1243,6 +1243,27 @@ https://rustwasm.github.io/docs/book/game-of-life/setup.html#wasm-pack
 ```
 
 
+```sh
+┌──(kali㉿kali)-[~/…/weekly67/devrust/wasmrust/wasm-game-of-life]
+└─$ wasm-pack build
+[INFO]: 🎯  Checking for the Wasm target...
+info: downloading component 'rust-std' for 'wasm32-unknown-unknown'
+```
+
+```sh
+┌──(kali㉿kali)-[~/…/weekly67/devrust/wasmrust/wasm-game-of-life]
+└─$ npm init wasm-app www      
+Need to install the following packages:
+create-wasm-app@0.1.0
+Ok to proceed? (y) 
+🦀 Rust + 🕸 Wasm = ❤
+```
+
+
+```sh
+www> npm install
+```
+
 
 
 
