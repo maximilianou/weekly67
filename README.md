@@ -2163,6 +2163,19 @@ d3ae11a87360: Already exists
 ```
 
 
+- yew - rust - webassembly - like react
+
+https://yew.rs/docs/getting-started/build-a-sample-app
+
+
+https://github.com/jetli/awesome-yew?tab=readme-ov-file
+
+https://github.com/rust-unofficial/awesome-rust
+
+
+
+```
+```
 
 ----------
 ----------

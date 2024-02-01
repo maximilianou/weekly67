@@ -1264,6 +1264,130 @@ Ok to proceed? (y)
 www> npm install
 ```
 
+---
+
+```sh
+┌──(kali㉿kali)-[~/…/webstatic4/axum/examples/static-file-server]
+└─$ cargo run 
+    Finished dev [unoptimized + debuginfo] target(s) in 6.56s
+     Running `/home/kali/projects/weekly67/devrust/webstatic4/axum/target/debug/example-static-file-server`
+2024-01-31T12:18:00.804669Z DEBUG example_static_file_server: listening on 127.0.0.1:3001
+2024-01-31T12:18:00.804838Z DEBUG example_static_file_server: listening on 127.0.0.1:3002
+2024-01-31T12:18:00.804984Z DEBUG example_static_file_server: listening on 127.0.0.1:3003
+2024-01-31T12:18:00.805124Z DEBUG example_static_file_server: listening on 127.0.0.1:3004
+2024-01-31T12:18:00.805250Z DEBUG example_static_file_server: listening on 127.0.0.1:3005
+2024-01-31T12:18:00.805380Z DEBUG example_static_file_server: listening on 127.0.0.1:3006
+2024-01-31T12:18:00.805518Z DEBUG example_static_file_server: listening on 127.0.0.1:3307
+```
+
+```sh
+┌──(kali㉿kali)-[~/projects/weekly67]
+└─$ curl http://localhost:3002/     
+Hi from index.html
+                          
+```
+
+```sh
+┌──(kali㉿kali)-[~/…/webstatic4/axum/examples/testing]
+└─$ cargo test
+   Compiling example-testing v0.1.0 (/home/kali/projects/weekly67/devrust/webstatic4/axum/examples/testing)
+    Finished test [unoptimized + debuginfo] target(s) in 25.68s
+     Running unittests src/main.rs (/home/kali/projects/weekly67/devrust/webstatic4/axum/target/debug/deps/example_testing-b4e032331c1bc338)
+
+running 6 tests
+test tests::hello_world ... ok
+test tests::json ... ok
+test tests::not_found ... ok
+test tests::multiple_request ... ok
+test tests::with_into_make_service_with_connect_info ... ok
+test tests::the_real_deal ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+```
+
+
+```sh
+
+┌──(kali㉿kali)-[~/projects/weekly67/devrust/webstatic4]
+└─$ cargo new yew-app   
+     Created binary (application) `yew-app` package
+                                                                                                                                           
+┌──(kali㉿kali)-[~/projects/weekly67/devrust/webstatic4]
+└─$ cd yew-app   
+
+┌──(kali㉿kali)-[~/…/weekly67/devrust/webstatic4/yew-app]
+└─$ cargo run  
+
+```
+
+```rs
+use yew::prelude::*;
+
+#[function_component]
+fn App() -> Html {
+    let counter = use_state(|| 0);
+    let onclick = {
+        let counter = counter.clone();
+        move |_| {
+            let value = *counter +1;
+            counter.set(value);
+        }
+    };
+    html! {
+        <div>
+          <button {onclick} >{ "+1" }</button>
+          <p>{ *counter }</p>
+        </div>
+    }
+}
+
+fn main() {
+    yew::Renderer::<App>::new().render();
+}
+
+```
+
+```html
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Yew App</title>
+    </head>
+    <body></body>
+</html>
+```
+
+
+```sh
+┌──(kali㉿kali)-[~/…/weekly67/devrust/webstatic4/yew-app]
+└─$ trunk serve --open
+
+```
+
+```sh
+touch Trunk.toml
+```
+
+```toml
+[serve]
+# The address to serve on LAN.
+address = "127.0.0.1"
+# The address to serve on WAN.
+# address = "0.0.0.0"
+# The port to serve on.
+port = 8000
+```
+
+```sh
+┌──(kali㉿kali)-[~/…/weekly67/devrust/webstatic4/yew-app]
+└─$ trunk serve --open
+
+```
+
+
+---
+
 
 
 
