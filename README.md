@@ -2162,11 +2162,11 @@ d3ae11a87360: Already exists
 ...
 ```
 
+https://gitlab.com/maximilianou/weekly67plan
 
 - yew - rust - webassembly - like react
 
 https://yew.rs/docs/getting-started/build-a-sample-app
-
 
 https://github.com/jetli/awesome-yew?tab=readme-ov-file
 
