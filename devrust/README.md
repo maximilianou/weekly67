@@ -1495,7 +1495,7 @@ static5/src/index.html
     <head>
         <meta charset="utf-8" />
         <title>Yew Application</title>        
-        <link rel="stylesheet" href="index.css" />        
+        <link data-trunk rel="css" href="index.css">     
     </head>
     <body></body>
 </html>
@@ -1503,7 +1503,83 @@ static5/src/index.html
 ```
 
 
+```css
+/* static5/src/index.css */
+:root {
+  --icon-body-bg-color: #2f3542;
+  --icon-body-color: #747d8c;
+  --icon-active-color: #2ed573;
+  --icon-size: 48;
+  --icon-bar-size: 8;
+  --icon-translation-size: calc((var(--icon-size) - var(--icon-bar-size)) / 2);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font: 1em/160% sans-serif;
+  background-color: var(--icon-body-bg-color);
+  color: var(--icon-body-color);
+}
+
+svg {
+  fill: currentColor;
+  max-width: 100%;
+  vertical-align: baseline;
+}
+
+.site-container {
+  padding: 2em;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+#menu-icon {
+  cursor: pointer;
+}
+
+.hamburger-icon {
+  cursor: pointer;
+}
+
+.hamburger-icon rect {
+  transition: all 0.3s ease-in-out;
+}
+
+.hamburger-icon:hover rect {
+  fill: var(--icon-active-color);
+}
+
+.hamburger-icon:hover .top,
+.hamburger-icon:hover .bottom {
+  transform-origin: center;
+}
+
+.hamburger-icon:hover .top {
+  transform: rotate(45deg)
+    translate(0, calc(var(--icon-translation-size) * 1px));
+}
+
+.hamburger-icon:hover .bottom {
+  transform: rotate(-45deg)
+    translate(0, calc(var(--icon-translation-size) * -1px));
+}
+
+.hamburger-icon:hover .middle {
+  opacity: 0;
+}
+
+```
+
+
 ---
+
 
 
 
